@@ -11,10 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', 'HomeController@index');
+Route::get('/active/{code}', 'Auth\RegisterController@active');
+Route::get('/active', 'Auth\RegisterController@send');
 Auth::routes();
-
-Route::get('/home', 'HomeController@index');

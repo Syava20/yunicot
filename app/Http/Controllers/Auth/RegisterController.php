@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -42,30 +46,66 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'firstName' => 'required|max:50',
+            'lastName' => 'required|max:50',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'sex' => 'required|in:0,1'
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return User
      */
     protected function create(array $data)
     {
+        $activationCode = str_random(32);
+        while (User::where('activationCode', $activationCode)->count() > 0) {
+            $activationCode = str_random(32);
+        }
+
+        Mail::send('emails.registration', array('code' => $activationCode), function ($message) use ($data) {
+            $message->to($data['email'], $data['firstName'] . ' ' . $data['lastName'])->subject(Lang::get('activationMailSubject'));
+        });
+
         return User::create([
-            'name' => $data['name'],
+            'firstName' => $data['firstName'],
+            'lastName' => $data['lastName'],
             'email' => $data['email'],
+            'sex' => $data['sex'],
             'password' => bcrypt($data['password']),
+            'activationCode' => $activationCode,
         ]);
+    }
+
+    public function active($code)
+    {
+        $activeUser = User::where('activationCode', $code)->firstOrFail();
+        $activeUser->active = 1;
+        $activeUser->activationCode = '';
+        $activeUser->save();
+        return view('auth.active-success');
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        return redirect('/active');
+    }
+
+    public function send(){
+        return view('auth.active');
     }
 }
