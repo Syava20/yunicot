@@ -54,15 +54,20 @@
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ Auth::user()->firstName }} <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
                                 <li>
+                                    <a href="{{ url('/'.Auth::user()->id) }}">
+                                        Мой профиль
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ url('/logout') }}"
                                         onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
-                                        Logout
+                                        {{ trans('profile.logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
