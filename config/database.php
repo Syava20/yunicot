@@ -54,9 +54,9 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'yunicot-beta.c1uomnwh4e2e.eu-west-1.rds.amazonaws.com'),
+            'host' => env('DB_HOST', 'yunicot.c1uomnwh4e2e.eu-west-1.rds.amazonaws.com'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'betayunicot'),
+            'database' => env('DB_DATABASE', 'ebdb'),
             'username' => env('DB_USERNAME', 'yunicot'),
             'password' => env('DB_PASSWORD', 'ujyxfhjdf96'),
             'charset' => 'utf8',

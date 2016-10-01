@@ -68,13 +68,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $activationCode = str_random(32);
-        while (User::where('activationCode', $activationCode)->count() > 0) {
+        do{
             $activationCode = str_random(32);
-        }
+        } while(User::where('activationCode', $activationCode)->count() > 0);
 
         Mail::send('emails.registration', array('code' => $activationCode), function ($message) use ($data) {
-            $message->to($data['email'], $data['firstName'] . ' ' . $data['lastName'])->subject(Lang::get('activationMailSubject'));
+            $message->to($data['email'], $data['firstName'] . ' ' . $data['lastName']);
+            $message->subject(Lang::get('mails.activationMailSubject'));
         });
 
         return User::create([
