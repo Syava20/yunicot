@@ -87,7 +87,7 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function active($code)
+    public function activation($code)
     {
         $activeUser = User::where('activationCode', $code)->firstOrFail();
         $activeUser->active = 1;
@@ -102,10 +102,10 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        return redirect('/active');
+        return redirect('/activation');
     }
 
-    public function send(){
-        return view('auth.active');
+    public function sent(){
+        return view('auth.activation');
     }
 }

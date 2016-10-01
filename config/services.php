@@ -15,8 +15,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+        'domain' => 'yunicot.com',
+        'secret' => 'key-91ed1e97d30c782d00277b85defcf1f7',
     ],
 
     'ses' => [
