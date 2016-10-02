@@ -26,7 +26,7 @@ return [
     ],
 
     'sparkpost' => [
-        'secret' => env('SPARKPOST_SECRET'),
+        'secret' => 'cbb6d0bf676cafe5af3af33a9423fffa5da92ac5',
     ],
 
     'stripe' => [

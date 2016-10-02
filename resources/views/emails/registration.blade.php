@@ -8,6 +8,6 @@
     <title>Активация аккаунта</title>
 </head>
 <body>
-<p>Для активации перейдите по ссылке: <a href="http://testyunicot.loc/active/{!! $code !!}}"></a></p>
+<p>Для активации перейдите по ссылке: <a href="{{ $url }}">{{ $url }}</a></p>
 </body>
 </html>

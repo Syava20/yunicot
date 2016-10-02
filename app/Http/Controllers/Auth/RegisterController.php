@@ -71,8 +71,11 @@ class RegisterController extends Controller
         do{
             $activationCode = str_random(32);
         } while(User::where('activationCode', $activationCode)->count() > 0);
-
-        Mail::send('emails.registration', array('code' => $activationCode), function ($message) use ($data) {
+        $url = url('/activation/'.$activationCode);
+        Mail::send('emails.registration', array(
+                    'code' => $activationCode,
+                    'url' => $url,
+                ), function ($message) use ($data) {
             $message->to($data['email'], $data['firstName'] . ' ' . $data['lastName']);
             $message->subject(Lang::get('mails.activationMailSubject'));
         });

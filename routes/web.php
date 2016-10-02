@@ -15,7 +15,7 @@
 Route::group(['middleware' => 'web'], function (){
 
     Route::get('/', 'HomeController@index');
-    Route::get('/activation/{code}', 'Auth\RegisterController@activation')->where(['code' => '[\s]{32}']);
+    Route::get('/activation/{code}', 'Auth\RegisterController@activation');
     Route::get('/activation', 'Auth\RegisterController@sent');
 
     Route::get('/lang/{locale}', 'LocaleController@change')->where(['locale' => '(en|ru|ua)']);
