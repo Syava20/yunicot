@@ -34,63 +34,42 @@ class ImageController extends Controller
      * @param null $anchor possible: top-left, top, top-right, left, center (default), right, bottom-left, bottom, bottom-right
      * @return mixed
      */
-    public function whResize($id, $filename, $w , $h = null, $type=null, $anchor=null)
+    public function whResize($id, $filename, $w , $h = null, $x = null, $y = null, $nw = null)
     {
         $filePath = storage_path().'/app/public/' . $id .'/'. $filename;
-        if (! $anchor) $anchor='center';
-        if(!$type && (!$w || !$h || $w == 'w')) $type = 'outbox';
-        else if (! $type) $type='asis';
-        if ($w=='w' ) $w=null;
-        if ($h=='h' || !$h) $h=null;
+        if($w == 'w') $w = null;
 
         $params = (object) array(
-            'filePath' =>$filePath,
+            'filePath' => $filePath,
             'w' => $w,
             'h' => $h,
-            'cw' => $w,
-            'ch' => $h,
-            'anchor' => $anchor,
+            'x' => $x,
+            'y' => $y,
+            'nw' => $nw,
         );
 
-        switch ($type) {
-            case 'asis':
-                $cacheImage = Image::cache(function($image) use( $filePath, $w, $h, $type){
-                    return $image->make($filePath)->resize($w, $h);
-                });
-                break;
-            case 'prop':
-                if($w>$h) $params->w = null;
-                else $params->h = null;
-                $cacheImage = $this->resizeAndChunk($params);
-                break;
-            case 'chunk':
-                if($w>$h) $params->h = null;
-                else $params->w = null;
-                $cacheImage = $this->resizeAndChunk($params);
-                break;
-            case 'outbox':
-                $cacheImage = Image::cache(function($image) use( $params){
-                    if(!$params->w)
-                        return $image->make($params->filePath)->heighten($params->h);
-                    else if(!$params->h)
-                        return $image->make($params->filePath)->widen($params->w);
-                    else
-                        return $image->make($params->filePath)->resize($params->w, $params->h);
 
-                },$this->cacheTime,false);
-                break;
-        }
-        return Response::make($cacheImage, 200, array('Content-Type' => 'image/jpeg'));
-    }
+        $cacheImage = Image::cache(function($image) use($params){
+            if(!$params->h){
+                $image->make($params->filePath)->widen($params->w);
+            }
+            elseif(!$params->x){
+                $image->make($params->filePath)->resize($params->w, $params->h);
+            }
+            elseif(!$params->y){
+                $image->make($params->filePath)->crop($params->w, $params->w, $params->h, $params->x);
+            }
+            elseif (!$params->nw){
+                $image->make($params->filePath)->crop($params->w, $params->h, $params->x, $params->y);
+            }
+            else{
+                $image->make($params->filePath)->crop($params->w, $params->h, $params->x, $params->y)->widen($params->nw);
+            }
 
-    protected function resizeAndChunk($params)
-    {
-        return Image::cache(function($image) use( $params){
-            return $image->make($params->filePath)->resize($params->w, $params->h, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->resizeCanvas($params->cw, $params->ch, $params->anchor);
-        },$this->cacheTime,false);
+        },$this->cacheTime, true);
+
+
+        return $cacheImage->response();
     }
 
     /*public function showLogo($id, $w = null, $x = 0, $y = 0){
