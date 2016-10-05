@@ -14,7 +14,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<a href="{{ url('/') }}" class="btn btn-default btn-lg text-uppercase home-link">
+			<a href="http://yunicot.loc/" class="btn btn-default btn-lg text-uppercase home-link">
 			  	 Домой
 			</a>
 		</div>
