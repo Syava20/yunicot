@@ -17,8 +17,8 @@
             <span>{{ $errors->has('email') ? $errors->first('email') : '' }}</span>
         </p>
         <p>Пол:
-            Муж <input type="radio" name="sex" value="0" {{ old('sex') == 0 ? 'checked' : Auth::user()->sex == 0 ? 'checked' : ''}}>
-            Жен <input type="radio" name="sex" value="1" {{ old('sex') == 1 ? 'checked' : Auth::user()->sex == 1 ? 'checked' : ''}}>
+            Муж <input type="radio" name="sex" value="0" {{ old('sex') == 0 ? 'checked' : Auth::user()->sex == 0 ? 'checked' : '' }}>
+            Жен <input type="radio" name="sex" value="1" {{ old('sex') == 1 ? 'checked' : Auth::user()->sex == 1 ? 'checked' : '' }}>
             <span>{{ $errors->has('sex') ? $errors->first('sex') : '' }}</span>
         </p>
         <p>
