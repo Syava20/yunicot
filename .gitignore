@@ -7,3 +7,4 @@ Homestead.yaml
 /config/mail.php
 yunicot.iml
 /composer.lock
+node_modules
