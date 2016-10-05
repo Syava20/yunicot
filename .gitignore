@@ -3,4 +3,7 @@ Homestead.json
 Homestead.yaml
 .env
 /vendor
-/node_modules
+/node_modulesphp
+/config/mail.php
+yunicot.iml
+/composer.lock
